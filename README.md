@@ -10,13 +10,13 @@ O desenho de arquitetura informado abaixo mostra alguns detalhes de como está c
 
 # Estrutura de deploy com Terraform (IaC)
 
-![TFTEC Cloud](https://github.com/raphasi/tftecaovivosp24/blob/main/Diagrama-IaC.png "Arquitetura IaC")
+![TFTEC Cloud](https://github.com/raphasi/tftecsp2024/blob/main/Diagrama-IaC.png "Arquitetura IaC")
 
-![TFTEC Cloud](https://github.com/raphasi/tftecaovivosp24/blob/main/Flow-IaC.png "Arquitetura IaC")
+![TFTEC Cloud](https://github.com/raphasi/tftecsp2024/blob/main/Flow-IaC.png "Arquitetura IaC")
 
 # Estrutura de Build e deploy da aplicação em cluster Azure Kubernetes Services (AKS)
 
-![TFTEC Cloud](https://github.com/raphasi/tftecaovivosp24/blob/main/Driagrama-Build-Deploy.png "Arquitetura Azure DevOps")
+![TFTEC Cloud](https://github.com/raphasi/tftecsp2024/blob/main/Driagrama-Build-Deploy.png "Arquitetura Azure DevOps")
 
 ## STEP01 - Criar um Resource Group e estrutura de VNETS e Subnets
 1- Script PowerShell para criar estrutura de rede inicial
