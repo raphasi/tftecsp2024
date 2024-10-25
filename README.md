@@ -263,6 +263,8 @@ Allow Azure services and resources to access this server: YES
 1.1 Instalar o SSMS
 ```cmd
 Acessar o servidor vm-apps e instalar o SQL Management Studio
+User: admin.tftec
+Pass: Partiunuvem@2024
 ```
 Download do SQL SSMS: https://aka.ms/ssmsfullsetup
 
