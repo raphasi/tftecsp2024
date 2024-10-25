@@ -212,7 +212,7 @@ Write-Output "Storage Account criada: $storageAccountName"
 2.0 Baixar pacotes das aplicações:
 
 Aplicação BEND (API)
-https://raw.githubusercontent.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.API.BEND.zip
+https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.API.BEND.zip
 
 https://github.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.API.BEND.zip
 
