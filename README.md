@@ -484,12 +484,71 @@ Add optional claims:
    Save
 ```
 
-```
-
 ## STEP07 - Configurar as variáveis de ambiente crm
 1.0 Configurar as variáveis de ambiente da aplicação CRM
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE
+[
+  {
+    "name": "ApiSettings:BaseUrl",
+    "value": "https://sua-url-bend-app-service.azurewebsites.net/",
+    "slotSetting": true
+  },
+  {
+    "name": "AuthSettings:BaseUrl",
+    "value": "https://sua-url-auth-app-service.azurewebsites.net/",
+    "slotSetting": false
+  },
+  {
+    "name": "AuthSettings:Scopes",
+    "value": "api://scope-id/AdminApi",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAD:Audience",
+    "value": "api://clientid",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:Authority",
+    "value": "https://login.microsoftonline.com/tenantid",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:ClientId",
+    "value": "clientid",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:ClientSecret",
+    "value": "client-secret",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:Issuer",
+    "value": "https://sts.windows.net/tenantid",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:TenantId",
+    "value": "tenantid",
+    "slotSetting": true
+  },
+  {
+    "name": "WEBSITE_ENABLE_SYNC_UPDATE_SITE",
+    "value": "true",
+    "slotSetting": false
+  },
+  {
+    "name": "WEBSITE_RUN_FROM_PACKAGE",
+    "value": "1",
+    "slotSetting": false
+  }
+]
 ```
 
 1.1 Testar o acesso CRM autenticando com o Entra ID
