@@ -212,18 +212,16 @@ Write-Output "Storage Account criada: $storageAccountName"
 2.0 Baixar pacotes das aplicações:
 
 Aplicação BEND (API)
-https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.API.BEND.zip
-
-https://github.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.API.BEND.zip
+https://raw.githubusercontent.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.API.BEND.zip
 
 Aplicação INGRESSO
-https://github.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.WebApp.Ingresso.zip
+https://raw.githubusercontent.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.WebApp.Ingresso.zip
 
 Aplicação CRM
-https://github.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.WebApp.Site.zip
+https://raw.githubusercontent.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.WebApp.Site.zip
 
 Aplicação AUTH
-https://github.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.API.AUTH.zip
+https://raw.githubusercontent.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.API.AUTH.zip
 
 
 2.1 Utilizando o cloudshell, fazer upload dos 4 pacotes.
