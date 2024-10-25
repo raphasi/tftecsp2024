@@ -229,25 +229,25 @@ https://github.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.API.AUTH.zip
 2.2 Realizar o deploy da aplicação BEND (API) para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az webapp deploy --resource-group rg-azure --name app-ingresso-tftec --src-path ingresso.zip
+az webapp deploy --resource-group rg-azure --name app-bend-tftec-dev --src-path CRM.API.BEND.zip
 ```
 
 2.3 Realizar o deploy da aplicação INGRESSO para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az webapp deploy --resource-group rg-azure --name app-bend-tftec --src-path bend.zip
+az webapp deploy --resource-group rg-azure --name app-ingresso-tftec-dev --src-path CRM.WebApp.Ingresso.zip
 ```
 
 2.4 Realizar o deploy da aplicação CRM para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az webapp deploy --resource-group rg-azure --name app-crm --src-path crm.zip
+az webapp deploy --resource-group rg-azure --name app-crm-tftec-dev --src-path CRM.WebApp.Site.zip
 ```
 
 2.5 Realizar o deploy da aplicação AUTH para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az webapp deploy --resource-group rg-azure --name app-auth --src-path app-auth.zip
+az webapp deploy --resource-group rg-azure --name app-auth-tftec-dev --src-path CRM.API.AUTH.zip
 ```
 
 ## STEP03 - Deploy do Azure SQL Database
