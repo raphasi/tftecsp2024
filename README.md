@@ -210,35 +210,43 @@ Write-Output "Storage Account criada: $storageAccountName"
    Escolher o App Service Plan criado no passo 1.0
  ```  
 2.0 Baixar pacotes das aplicações:
-https://github.com/raphasi/imersaoazure
 
-2.1 Descompactar o .zip e utilizando o cloudshell, fazer upload dos 4 pacotes.
+Aplicação BEND (API)
+https://github.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.API.BEND.zip
+
+Aplicação INGRESSO
+https://github.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.WebApp.Ingresso.zip
+
+Aplicação CRM
+https://github.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.WebApp.Site.zip
+
+Aplicação AUTH
+https://github.com/raphasi/tftecsp2024/blob/main/WebApps%20Code/CRM.API.AUTH.zip
+
+
+2.1 Utilizando o cloudshell, fazer upload dos 4 pacotes.
 
 2.2 Realizar o deploy da aplicação BEND (API) para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az login (ou utilizar o CloudShell)
 az webapp deploy --resource-group rg-azure --name app-ingresso-tftec --src-path ingresso.zip
 ```
 
 2.3 Realizar o deploy da aplicação INGRESSO para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az login (ou utilizar o CloudShell)
 az webapp deploy --resource-group rg-azure --name app-bend-tftec --src-path bend.zip
 ```
 
 2.4 Realizar o deploy da aplicação CRM para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az login (ou utilizar o CloudShell)
 az webapp deploy --resource-group rg-azure --name app-crm --src-path crm.zip
 ```
 
 2.5 Realizar o deploy da aplicação AUTH para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az login (ou utilizar o CloudShell)
 az webapp deploy --resource-group rg-azure --name app-auth --src-path app-auth.zip
 ```
 
