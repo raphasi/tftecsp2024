@@ -6,7 +6,7 @@ Temos como objetivo construir uma infraestrutura completa, simulando um cenário
 # Estrutura
 O desenho de arquitetura informado abaixo mostra alguns detalhes de como está configurada a estrutura da empresa que iremos construir.
 
-![TFTEC Cloud](https://github.com/raphasi/tftecaovivosp24/blob/main/Diagrama.png "Arquitetura Imersão")
+![TFTEC Cloud](https://github.com/raphasi/tftecsp2024/blob/main/Diagrama.png "Arquitetura Imersão")
 
 # Estrutura de deploy com Terraform (IaC)
 
