@@ -159,15 +159,7 @@ New-AzStorageContainer -Name "imagens" -Context $ctx -Permission Blob
 
 Write-Output "Storage Account criada: $storageAccountName"
  ```
-
-2- Aplicar Azure Policy
-   - Aplicar Policy no nível do Resource Group criado no passo anterior
-   - Aplicar policy para recursos herdarem a TAG do RG-AZURE (Inherit a tag from the resource group)
-   - Aplicar policy para limitar o tamanho das VMs para B2S e D2S_V3 (Allowed virtual machine size SKUs)
-   - Configurar mensagem de não complice: Você escolheu um SKU de VM não permitido, Utilize apenas B2S ou D2S_V3
-   
-
-
+ 
 
 ## STEP02 - Deploy dos WebApps
 1.0 Criar um App Service Plan:
