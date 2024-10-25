@@ -701,10 +701,72 @@ IMPORTANTE: Copiar o valor do secret gerado
 Publisher Domain será automaticamente configurado como: tftecsp.onmicrosoft.com
 ```
 
-## STEP07 - Configurar as variáveis de ambiente demais ambientes
+## STEP9.1 - Configurar as variáveis de ambiente demais ambientes
+
 1.0 Configurar as variáveis de ambiente da aplicação INGRESSO
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO INGRESSO
+[
+  {
+    "name": "ApiSettings:BaseUrl",
+    "value": "https://seu-app-service-bend.azurewebsites.net/",
+    "slotSetting": true
+  },
+  {
+    "name": "AuthSettings:BaseUrl",
+    "value": "https://seu-app-service-auth.azurewebsites.net/",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAdB2C:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:ClientId",
+    "value": "9e9cac22-2af0-4e5a-857f-65a8f0d75a49",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:ClientSecret",
+    "value": "secret",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:Domain",
+    "value": "tftecsp.onmicrosoft.com",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:EditProfilePolicyId",
+    "value": "B2C_1_Edit",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:Instance",
+    "value": "https://seu-tenant.b2clogin.com/",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:ResetPasswordPolicyId",
+    "value": "B2C_1_reset",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:SignUpSignInPolicyId",
+    "value": "B2C_1_login",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:TenantId",
+    "value": "81fc41c5-94cd-4ac4-a73d-b47ae10e39f3",
+    "slotSetting": true
+  },
+  {
+    "name": "WEBSITE_ENABLE_SYNC_UPDATE_SITE",
+    "value": "true",
+    "slotSetting": false
+  }
+]
 ```
 1.1 Configurar as variáveis de ambiente da aplicação BEND
 ```cmd
@@ -712,7 +774,92 @@ DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃ
 ```
 1.2 Configurar as variáveis de ambiente da aplicação AUTH
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO AUTH
+  {
+    "name": "AzureAD:Audience",
+    "value": "api://d72a4f3c-74f9-46f5-a1d0-6a159f89855c",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:Authority",
+    "value": "https://login.microsoftonline.com/cab1ba99-21e0-4a40-8f98-aef71b9b0f80",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:ClientId",
+    "value": "d72a4f3c-74f9-46f5-a1d0-6a159f89855c",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:ClientSecret",
+    "value": "secret",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:Issuer",
+    "value": "https://sts.windows.net/cab1ba99-21e0-4a40-8f98-aef71b9b0f80",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:TenantId",
+    "value": "cab1ba99-21e0-4a40-8f98-aef71b9b0f80",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:Audience",
+    "value": "713c03e8-2067-4fe5-86f1-885a730d6a90",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:Authority",
+    "value": "https://tftecsp.b2clogin.com/8277e546-2d6f-4233-81f3-d3760ad7a0d2/v2.0/",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:ClientId",
+    "value": "9e9cac22-2af0-4e5a-857f-65a8f0d75a49",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:ClientSecret",
+    "value": "secret",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:EditProfilePolicyId",
+    "value": "B2C_1_Edit",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:Issuer",
+    "value": "https://seu-tenant.b2clogin.com/8277e546-2d6f-4233-81f3-d3760ad7a0d2/v2.0/",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:KeysEndpoint",
+    "value": "https://seu-tenant.b2clogin.com/tftecsp.onmicrosoft.com/discovery/v2.0/keys?p=b2c_1_login",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:ResetPasswordPolicyId",
+    "value": "B2C_1_reset",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:SignUpSignInPolicyId",
+    "value": "B2C_1_login",
+    "slotSetting": true
+  }
+]
 ```
 
 ## STEP10 - Realizar teste completo para todas as aplicações
