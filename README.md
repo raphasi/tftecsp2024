@@ -210,36 +210,44 @@ Write-Output "Storage Account criada: $storageAccountName"
    Escolher o App Service Plan criado no passo 1.0
  ```  
 2.0 Baixar pacotes das aplicações:
-https://github.com/raphasi/imersaoazure
 
-2.1 Descompactar o .zip e utilizando o cloudshell, fazer upload dos 4 pacotes.
+Aplicação BEND (API)
+https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.API.BEND.zip
+
+Aplicação INGRESSO
+https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.WebApp.Ingresso.zip
+
+Aplicação CRM
+https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.WebApp.Site.zip
+
+Aplicação AUTH
+https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.API.AUTH.zip
+
+
+2.1 Utilizando o cloudshell, fazer upload dos 4 pacotes.
 
 2.2 Realizar o deploy da aplicação BEND (API) para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az login (ou utilizar o CloudShell)
-az webapp deploy --resource-group rg-azure --name app-ingresso-tftec --src-path ingresso.zip
+az webapp deploy --resource-group rg-tftecsp-001 --name app-bend-tftec-dev --src-path CRM.API.BEND.zip
 ```
 
 2.3 Realizar o deploy da aplicação INGRESSO para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az login (ou utilizar o CloudShell)
-az webapp deploy --resource-group rg-azure --name app-bend-tftec --src-path bend.zip
+az webapp deploy --resource-group rg-tftecsp-001 --name app-ingresso-tftec-dev --src-path CRM.WebApp.Ingresso.zip
 ```
 
 2.4 Realizar o deploy da aplicação CRM para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az login (ou utilizar o CloudShell)
-az webapp deploy --resource-group rg-azure --name app-crm --src-path crm.zip
+az webapp deploy --resource-group rg-tftecsp-001 --name app-crm-tftec-dev --src-path CRM.WebApp.Site.zip
 ```
 
 2.5 Realizar o deploy da aplicação AUTH para o WebApp
 Abrir o Powershell ou Terminal e executar o seguinte comando:
 ```cmd
-az login (ou utilizar o CloudShell)
-az webapp deploy --resource-group rg-azure --name app-auth --src-path app-auth.zip
+az webapp deploy --resource-group rg-tftecsp-001 --name app-auth-tftec-dev --src-path CRM.API.AUTH.zip
 ```
 
 ## STEP03 - Deploy do Azure SQL Database
@@ -255,6 +263,8 @@ Allow Azure services and resources to access this server: YES
 1.1 Instalar o SSMS
 ```cmd
 Acessar o servidor vm-apps e instalar o SQL Management Studio
+User: admin.tftec
+Pass: Partiunuvem@2024
 ```
 Download do SQL SSMS: https://aka.ms/ssmsfullsetup
 
@@ -388,16 +398,167 @@ Service Principal Lock:
       - Credentials with usage sign
       - Token encryption key ID
 Save
-
-1.1 Criar o App Registration CRM02
+```
+2.0 Criar o App Registration CRM.APP.SITE
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DO APPREGISTRATION
+Acessar o Azure Portal
+Acessar Microsoft Entra ID
+App Registrations - New Registration
+Nome: CRM.APP.SITE
+Suported account types: Single tenant
+Platform configuration: Web
+   Redirect URI: https://sua-url-app-service/signin-oidc
+Register
+```
+
+2.1 Configurar Expose an API
+```cmd
+Acessar o App Registration criado
+Selecionar Expose an API
+Set Application ID URI: api://(copie o seu ID)
+Add a scope:
+   - Scope name: scope_crm
+   - Who can consent?: Admins only
+   - Admin consent display name: scope_crm
+   - Admin consent description: scope_crm
+   - State: Enabled
+   - Add scope
+```
+
+2.2 Configurar App Roles
+```cmd
+Acessar App roles
+New app role:
+   Display name: AdminOnly
+   Allowed member types: Users/Groups + Applications
+   Value: Admin
+   Description: Admin
+   Do you want to enable this app role?: Yes
+   Apply
+```
+
+2.3 Configurar API Permissions
+```cmd
+Acessar API Permissions
+Add a permission
+Microsoft Graph:
+   - openid (Delegated)
+   - profile (Delegated)
+   - offline_access (Delegated)
+   - User.Read (Delegated)
+
+CRM.API:
+   - AdminApi (Delegated)
+Add permissions
+```
+
+2.4 Configurar Authentication
+```cmd
+Acessar Authentication
+Platform configurations: Web
+Redirect URIs: https://sua-url-app-service/signin-oidc
+Enable implicit grant and hybrid flows:
+   Access tokens: Yes
+   ID tokens: Yes
+Save
+```
+
+2.5 Configurar Certificates & secrets
+```cmd
+Acessar Certificates & secrets
+New client secret
+   Description: secret
+   Expires: 18 months
+   Add
+IMPORTANTE: Copiar o valor do secret gerado
+```
+
+2.6 Configurar Service Principal Lock
+```cmd
+Acessar Branding & properties
+Service Principal Lock:
+   Enable service principal lock: Yes
+   Lock:
+      - All Properties
+      - Credentials with usage verify
+      - Credentials with usage sign
+      - Token encryption key ID
+Save
+```
+
+2.7 Configurar Token configuration
+```cmd
+Acessar Token configuration
+Add optional claims:
+   Token type: Access
+   Save
 ```
 
 ## STEP07 - Configurar as variáveis de ambiente crm
 1.0 Configurar as variáveis de ambiente da aplicação CRM
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE
+[
+  {
+    "name": "ApiSettings:BaseUrl",
+    "value": "https://sua-url-bend-app-service.azurewebsites.net/",
+    "slotSetting": true
+  },
+  {
+    "name": "AuthSettings:BaseUrl",
+    "value": "https://sua-url-auth-app-service.azurewebsites.net/",
+    "slotSetting": false
+  },
+  {
+    "name": "AuthSettings:Scopes",
+    "value": "api://scope-id/AdminApi",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAD:Audience",
+    "value": "api://clientid",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:Authority",
+    "value": "https://login.microsoftonline.com/tenantid",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:ClientId",
+    "value": "clientid",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:ClientSecret",
+    "value": "client-secret",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:Issuer",
+    "value": "https://sts.windows.net/tenantid",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:TenantId",
+    "value": "tenantid",
+    "slotSetting": true
+  },
+  {
+    "name": "WEBSITE_ENABLE_SYNC_UPDATE_SITE",
+    "value": "true",
+    "slotSetting": false
+  },
+  {
+    "name": "WEBSITE_RUN_FROM_PACKAGE",
+    "value": "1",
+    "slotSetting": false
+  }
+]
 ```
 
 1.1 Testar o acesso CRM autenticando com o Entra ID
@@ -417,20 +578,197 @@ Digitar um domain name para a organização
 Escolher o Resource Group: rg-tftecsp
 ```
 
-## STEP09 - Deploy Apps Registration demais aplicações
-1.0 Criar o App Registration 03
+## STEP09 - Deploy Apps Registration demais aplicações 
+
+1.0 Criar o App Registration SISTEMA.API.LOJA
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DO APPREGISTRATION
-```
-1.1 Criar o App Registration 04
-```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DO APPREGISTRATION
+Acessar o Azure Portal
+Acessar Azure AD B2C
+App Registrations - New Registration
+Nome: SISTEMA.API.LOJA
+Suported account types: Accounts in any identity provider or organizational directory
+Register
 ```
 
-## STEP07 - Configurar as variáveis de ambiente demais ambientes
+1.1 Configurar Expose an API
+```cmd
+Acessar o App Registration criado
+Selecionar Expose an API
+Set Application ID URI: https://tftecsp.onmicrosoft.com/(copie o seu ID)
+Add a scope:
+   - Scope name: ClientAPI
+   - Who can consent?: Admins only
+   - Admin consent display name: ClientAPI
+   - Admin consent description: ClientAPI
+   - State: Enabled
+   - Add scope
+```
+
+1.2 Configurar API Permissions
+```cmd
+Acessar API Permissions
+Add a permission
+Microsoft Graph:
+   - profile (Delegated)
+   - email (Delegated)
+Add permissions
+```
+
+1.3 Configurar Token Version
+```cmd
+Acessar Manifest
+Localizar "accessTokenAcceptedVersion": null
+Alterar para "accessTokenAcceptedVersion": 2
+Save
+```
+
+1.4 Configurar Authentication
+```cmd
+Acessar Authentication
+Platform configurations: None
+Enable implicit grant and hybrid flows:
+   Access tokens: No
+   ID tokens: No
+Save
+```
+
+1.5 Configurar Application ID URI
+```cmd
+Acessar Expose an API
+Application ID URI: https://tenant-b2c.onmicrosoft.com/(copie o seu ID)
+Save
+```
+
+1.6 Configurar Publisher Domain
+```cmd
+Publisher Domain será automaticamente configurado como: tenant-b2c.onmicrosoft.com
+```
+
+2.0 Criar o App Registration SISTEMA.LOJA
+```cmd
+Acessar o Azure Portal
+Acessar Azure AD B2C
+App Registrations - New Registration
+Nome: SISTEMA.LOJA
+Suported account types: Accounts in any identity provider or organizational directory
+Platform configuration: Web
+   Redirect URI: https://ingresso.tftecspdev.shop/signin-oidc
+Register
+```
+
+2.1 Configurar API Permissions
+```cmd
+Acessar API Permissions
+Add a permission
+Microsoft Graph:
+   - profile (Delegated)
+   - email (Delegated)
+
+SISTEMA.API.LOJA:
+   - ClientAPI (Delegated)
+Add permissions
+```
+
+2.2 Configurar Token Version
+```cmd
+Acessar Manifest
+Localizar "accessTokenAcceptedVersion": null
+Alterar para "accessTokenAcceptedVersion": 2
+Save
+```
+
+2.3 Configurar Authentication
+```cmd
+Acessar Authentication
+Platform configurations: Web
+Redirect URIs: https://ingresso.tftecspdev.shop/signin-oidc
+Enable implicit grant and hybrid flows:
+   Access tokens: Yes
+   ID tokens: Yes
+Save
+```
+
+2.4 Configurar Certificates & secrets
+```cmd
+Acessar Certificates & secrets
+New client secret
+   Description: secret
+   Expires: 18 months
+   Add
+IMPORTANTE: Copiar o valor do secret gerado
+```
+
+2.5 Configurar Publisher Domain
+```cmd
+Publisher Domain será automaticamente configurado como: tftecsp.onmicrosoft.com
+```
+
+## STEP9.1 - Configurar as variáveis de ambiente demais ambientes
+
 1.0 Configurar as variáveis de ambiente da aplicação INGRESSO
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO INGRESSO
+[
+  {
+    "name": "ApiSettings:BaseUrl",
+    "value": "https://seu-app-service-bend.azurewebsites.net/",
+    "slotSetting": true
+  },
+  {
+    "name": "AuthSettings:BaseUrl",
+    "value": "https://seu-app-service-auth.azurewebsites.net/",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAdB2C:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:ClientId",
+    "value": "9e9cac22-2af0-4e5a-857f-65a8f0d75a49",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:ClientSecret",
+    "value": "secret",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:Domain",
+    "value": "tftecsp.onmicrosoft.com",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:EditProfilePolicyId",
+    "value": "B2C_1_Edit",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:Instance",
+    "value": "https://seu-tenant.b2clogin.com/",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:ResetPasswordPolicyId",
+    "value": "B2C_1_reset",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:SignUpSignInPolicyId",
+    "value": "B2C_1_login",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAdB2C:TenantId",
+    "value": "81fc41c5-94cd-4ac4-a73d-b47ae10e39f3",
+    "slotSetting": true
+  },
+  {
+    "name": "WEBSITE_ENABLE_SYNC_UPDATE_SITE",
+    "value": "true",
+    "slotSetting": false
+  }
+]
 ```
 1.1 Configurar as variáveis de ambiente da aplicação BEND
 ```cmd
@@ -438,7 +776,92 @@ DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃ
 ```
 1.2 Configurar as variáveis de ambiente da aplicação AUTH
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO AUTH
+  {
+    "name": "AzureAD:Audience",
+    "value": "api://d72a4f3c-74f9-46f5-a1d0-6a159f89855c",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:Authority",
+    "value": "https://login.microsoftonline.com/cab1ba99-21e0-4a40-8f98-aef71b9b0f80",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:ClientId",
+    "value": "d72a4f3c-74f9-46f5-a1d0-6a159f89855c",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:ClientSecret",
+    "value": "secret",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:Issuer",
+    "value": "https://sts.windows.net/cab1ba99-21e0-4a40-8f98-aef71b9b0f80",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureAD:TenantId",
+    "value": "cab1ba99-21e0-4a40-8f98-aef71b9b0f80",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:Audience",
+    "value": "713c03e8-2067-4fe5-86f1-885a730d6a90",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:Authority",
+    "value": "https://tftecsp.b2clogin.com/8277e546-2d6f-4233-81f3-d3760ad7a0d2/v2.0/",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:ClientId",
+    "value": "9e9cac22-2af0-4e5a-857f-65a8f0d75a49",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:ClientSecret",
+    "value": "secret",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:EditProfilePolicyId",
+    "value": "B2C_1_Edit",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:Issuer",
+    "value": "https://seu-tenant.b2clogin.com/8277e546-2d6f-4233-81f3-d3760ad7a0d2/v2.0/",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:KeysEndpoint",
+    "value": "https://seu-tenant.b2clogin.com/tftecsp.onmicrosoft.com/discovery/v2.0/keys?p=b2c_1_login",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:ResetPasswordPolicyId",
+    "value": "B2C_1_reset",
+    "slotSetting": true
+  },
+  {
+    "name": "AzureB2C:SignUpSignInPolicyId",
+    "value": "B2C_1_login",
+    "slotSetting": true
+  }
+]
 ```
 
 ## STEP10 - Realizar teste completo para todas as aplicações
