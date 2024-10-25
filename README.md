@@ -568,14 +568,129 @@ Digitar um domain name para a organização
 Escolher o Resource Group: rg-tftecsp
 ```
 
-## STEP09 - Deploy Apps Registration demais aplicações
-1.0 Criar o App Registration 03
+## STEP09 - Deploy Apps Registration demais aplicações 
+
+1.0 Criar o App Registration SISTEMA.API.LOJA
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DO APPREGISTRATION
+Acessar o Azure Portal
+Acessar Azure AD B2C
+App Registrations - New Registration
+Nome: SISTEMA.API.LOJA
+Suported account types: Accounts in any identity provider or organizational directory
+Register
 ```
-1.1 Criar o App Registration 04
+
+1.1 Configurar Expose an API
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DO APPREGISTRATION
+Acessar o App Registration criado
+Selecionar Expose an API
+Set Application ID URI: https://tftecsp.onmicrosoft.com/(copie o seu ID)
+Add a scope:
+   - Scope name: ClientAPI
+   - Who can consent?: Admins only
+   - Admin consent display name: ClientAPI
+   - Admin consent description: ClientAPI
+   - State: Enabled
+   - Add scope
+```
+
+1.2 Configurar API Permissions
+```cmd
+Acessar API Permissions
+Add a permission
+Microsoft Graph:
+   - profile (Delegated)
+   - email (Delegated)
+Add permissions
+```
+
+1.3 Configurar Token Version
+```cmd
+Acessar Manifest
+Localizar "accessTokenAcceptedVersion": null
+Alterar para "accessTokenAcceptedVersion": 2
+Save
+```
+
+1.4 Configurar Authentication
+```cmd
+Acessar Authentication
+Platform configurations: None
+Enable implicit grant and hybrid flows:
+   Access tokens: No
+   ID tokens: No
+Save
+```
+
+1.5 Configurar Application ID URI
+```cmd
+Acessar Expose an API
+Application ID URI: https://tenant-b2c.onmicrosoft.com/(copie o seu ID)
+Save
+```
+
+1.6 Configurar Publisher Domain
+```cmd
+Publisher Domain será automaticamente configurado como: tenant-b2c.onmicrosoft.com
+```
+
+2.0 Criar o App Registration SISTEMA.LOJA
+```cmd
+Acessar o Azure Portal
+Acessar Azure AD B2C
+App Registrations - New Registration
+Nome: SISTEMA.LOJA
+Suported account types: Accounts in any identity provider or organizational directory
+Platform configuration: Web
+   Redirect URI: https://ingresso.tftecspdev.shop/signin-oidc
+Register
+```
+
+2.1 Configurar API Permissions
+```cmd
+Acessar API Permissions
+Add a permission
+Microsoft Graph:
+   - profile (Delegated)
+   - email (Delegated)
+
+SISTEMA.API.LOJA:
+   - ClientAPI (Delegated)
+Add permissions
+```
+
+2.2 Configurar Token Version
+```cmd
+Acessar Manifest
+Localizar "accessTokenAcceptedVersion": null
+Alterar para "accessTokenAcceptedVersion": 2
+Save
+```
+
+2.3 Configurar Authentication
+```cmd
+Acessar Authentication
+Platform configurations: Web
+Redirect URIs: https://ingresso.tftecspdev.shop/signin-oidc
+Enable implicit grant and hybrid flows:
+   Access tokens: Yes
+   ID tokens: Yes
+Save
+```
+
+2.4 Configurar Certificates & secrets
+```cmd
+Acessar Certificates & secrets
+New client secret
+   Description: secret
+   Expires: 18 months
+   Add
+IMPORTANTE: Copiar o valor do secret gerado
+```
+
+2.5 Configurar Publisher Domain
+```cmd
+Publisher Domain será automaticamente configurado como: tftecsp.onmicrosoft.com
 ```
 
 ## STEP07 - Configurar as variáveis de ambiente demais ambientes
