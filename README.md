@@ -300,10 +300,94 @@ DESCREVER OS PASSOS PARA CONFIGURAÇÃO DOS FLUXOS
 
 
 ## STEP06 - Deploy Apps Registration para o CRM
+
 1.0 Criar o App Registration CRM01
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DO APPREGISTRATION
+1.0 Criar o App Registration CRM.API
+```cmd
+Acessar o Azure Portal
+Acessar Microsoft Entra ID
+App Registrations - New Registration
+Nome: CRM.API
+Suported account types: Single tenant
+Register
 ```
+
+1.1 Configurar Expose an API
+```cmd
+Acessar o App Registration criado
+Selecionar Expose an API
+Set Application ID URI: api://(copie o seu ID)
+Add a scope:
+   - Scope name: AdminApi
+   - Who can consent?: Admins only
+   - Admin consent display name: AdminApi
+   - Admin consent description: AdminApi
+   - State: Enabled
+   - Add scope
+```
+
+1.2 Configurar App Roles
+```cmd
+Acessar App roles
+New app role:
+   Display name: Admin
+   Allowed member types: Users/Groups + Applications
+   Value: Admin
+   Description: Admin
+   Do you want to enable this app role?: Yes
+   Apply
+```
+
+1.3 Configurar API Permissions
+```cmd
+Acessar API Permissions
+Add a permission
+Microsoft Graph
+Delegated permissions
+User.Read
+Add permissions
+```
+
+1.4 Configurar Authentication
+```cmd
+Acessar Authentication
+Enable implicit grant and hybrid flows:
+   Access tokens: Yes
+   ID tokens: Yes
+Save
+```
+
+1.5 Configurar Certificates & secrets
+```cmd
+Acessar Certificates & secrets
+New client secret
+   Description: secret
+   Expires: 18 months
+   Add
+IMPORTANTE: Copiar o valor do secret gerado
+```
+
+1.6 Configurar Pre-authorized applications
+```cmd
+Acessar Expose an API
+Add a client application
+   Client ID: (copie o seu ID)
+   Authorized scopes: AdminApi
+   Add application
+```
+
+1.7 Configurar Service Principal Lock
+```cmd
+Acessar Branding & properties
+Service Principal Lock:
+   Enable service principal lock: Yes
+   Lock:
+      - All Properties
+      - Credentials with usage verify
+      - Credentials with usage sign
+      - Token encryption key ID
+Save
 
 1.1 Criar o App Registration CRM02
 ```cmd
