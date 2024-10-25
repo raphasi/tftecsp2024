@@ -267,6 +267,7 @@ User: admin.tftec
 Pass: Partiunuvem@2024
 ```
 Download do SQL SSMS: https://aka.ms/ssmsfullsetup
+Donwload do Database: https://raw.githubusercontent.com/raphasi/tftecsp2024/main/sistema-tftec-db.bacpac
 
 1.2 Importar database aplicação WebSite
 ```cmd
