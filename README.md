@@ -964,7 +964,7 @@ Publisher Domain será automaticamente configurado como: tftecsp.onmicrosoft.com
 ## STEP10 - Realizar teste completo para todas as aplicações
 1.0 Testar experiência no ambiente de Compra e CRM
 ```cmd
-BEND: Realizar um teste de GET nos dados de custumer
+BEND: Realizar um teste de GET nos dados de costumer
 INGRESSO: Realizar o cadastro de um usuário no site utilizando AZURE B2C e realizar uma compra de produto.
 CRM: Realizar a autenticação utilizando um usuário com permissão no Entra ID e validar a compra realizada no passo anterior.
 ```
@@ -1020,7 +1020,7 @@ Selecionar a connection já criada no passo anterior
 ```cmd
 Teste via BEND - Swagger
 Teste de login no CRM via Entra ID
-Teste de login B2C no CRM
+Teste de login B2C no Ingresso
 ```
 
 
@@ -1038,10 +1038,11 @@ Gerar o certificado cno formato pfx
 Cadastrar uma senha simples para o certificado. Exemplo: tftec2024
 ```
 
-1.2 repetir o passo de criação 3 vezes:
+1.2 repetir o passo de criação 4 vezes:
 ```cmd
  - Certificado para aplicação INGRESSO
  - Certificado para aplicação BEND (api)
+ - Certificado para aplicação AUTH (api)
  - Certificado para aplicação CRM
 ```
 
@@ -1058,6 +1059,7 @@ Cadastrar uma senha simples para o certificado. Exemplo: tftec2024
 Fazer upload do certificado pfx da aplicação INGRESSO
 Fazer upload do certificado pfx da aplicação CRM
 Fazer upload do certificado pfx da aplicação BEND (API)
+Fazer upload do certificado pfx da aplicação AUTH (API)
 ```
 
 ## STEP14 - Criar um Managed Identity
@@ -1305,14 +1307,7 @@ DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃ
 DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO BEND
 ```
 
-
-
-
-
-
 # PASSOS UTILIZADOS NO EVENTO DE 2023 #
-
-
 
 ## STEP21 - Deploy APIM - API Management service
   ```cmd
