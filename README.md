@@ -20,7 +20,6 @@ O desenho de arquitetura informado abaixo mostra alguns detalhes de como está c
 
 ## STEP01 - Criar um Resource Group e estrutura de VNETS e Subnets
 1- Script PowerShell para criar estrutura de rede inicial
-Realizar download do Script e importar no Azure CloudShell: https://github.com/raphasi/tftecaovivosp24/blob/main/Script_Landing_Zone.ps1
 ```cmd
 ## Script: Criar Landing Zone - TFTEC ao VIVO SP
 ## Autor: Raphael Andrade
@@ -224,28 +223,29 @@ Aplicação AUTH
 https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.API.AUTH.zip
 
 
+
 2.1 Utilizando o cloudshell, fazer upload dos 4 pacotes.
 
 2.2 Realizar o deploy da aplicação BEND (API) para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
+Abrir o cloudshel e executar o seguinte comando:
 ```cmd
 az webapp deploy --resource-group rg-tftecsp-001 --name app-bend-tftec-dev --src-path CRM.API.BEND.zip
 ```
 
 2.3 Realizar o deploy da aplicação INGRESSO para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
+Abrir o cloudshel e executar o seguinte comando:
 ```cmd
 az webapp deploy --resource-group rg-tftecsp-001 --name app-ingresso-tftec-dev --src-path CRM.WebApp.Ingresso.zip
 ```
 
 2.4 Realizar o deploy da aplicação CRM para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
+Abrir o cloudshel e executar o seguinte comando:
 ```cmd
 az webapp deploy --resource-group rg-tftecsp-001 --name app-crm-tftec-dev --src-path CRM.WebApp.Site.zip
 ```
 
 2.5 Realizar o deploy da aplicação AUTH para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
+Abrir o cloudshel e executar o seguinte comando:
 ```cmd
 az webapp deploy --resource-group rg-tftecsp-001 --name app-auth-tftec-dev --src-path CRM.API.AUTH.zip
 ```
@@ -267,6 +267,7 @@ User: admin.tftec
 Pass: Partiunuvem@2024
 ```
 Download do SQL SSMS: https://aka.ms/ssmsfullsetup
+
 Donwload do Database: https://raw.githubusercontent.com/raphasi/tftecsp2024/main/sistema-tftec-db.bacpac
 
 1.2 Importar database aplicação WebSite
