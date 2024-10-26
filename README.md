@@ -1142,6 +1142,19 @@ Adicionar uma Access policies
 Secret e Certification permitions: GET
 ```
 
+## STEP15 - Deploy AKS
+1.0 Acessar a seguinte estrutura:
+```cmd
+Resource Group: rg-tftecsp-001
+Region: uksouth
+Name: mgtid-kvault-certs
+```
+
+
+
+
+
+
 ## STEP15 - Deploy do Application Gateway
 1.0 Deploy Application Gateway e configuração do App Ingresso:
 ```cmd
@@ -1372,117 +1385,6 @@ DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃ
 ```cmd
 DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO BEND
 ```
-
-# PASSOS UTILIZADOS NO EVENTO DE 2023 #
-
-## STEP21 - Deploy APIM - API Management service
-  ```cmd
-   Cluster present configuration: Standard
-   Nome: apim-tftec01
-   Região: east-us
-   Organization Name: TFTEC Cloud
-   Administrator email: seu email para notificações
-   Pricing tier: Developer
-   ```
-   
-## STEP22 - Import Azure SQL Database
-```cmd
-Abrir o SQL Management Studio
-Server Name: Copiar o nome do SQL Server já existente
-Alterar formato de autenticação para SQL Server authentication  
-Logar com usuário e senha usados na criação do banco
-Importar o database usando a opção de dacpac
-Manter o nome do database como apim_database
-```
-
-## STEP23 - Deploy WebApp API
-1- Criar um WebApp
-```cmd
-   Nome: tftecapi01 (usar seu nome exclusivo)
-   Publish: Code
-   Runtime Stack: .NET6
-   Região: east-us
-   Escolher AppServicePlan já criado
-```
-2- Deploy da aplicação
-Baixar o zip da aplicação em 
-https://github.com/raphasi/imersaoazure
-
-3- Realizar o deploy da aplicação para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
-```cmd
-az login (ou utilizar o CloudShell)
-az webapp deploy --resource-group rg-azure --name <app-name> --src-path DeploymentAPI.zip
-```
-4- Ajustar application setting para endereço do SQL Database
-   - Acessar o WebApp - Configuration
-   - Connection string
-   - New connection string
-   - Add/Edit connection string
-  ```cmd
-   Name: DefaultConnection
-   Value: Server=tcp:sqlsrvtftec00001.database.windows.net,1433;Initial Catalog=apim_database;Persist Security Info=False;User ID=adminsql;Password=Partiunuvem@2023;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
-   Type: SQLAzure
-   SAVE
-   ``` 
-   
-5- Ajustar conexão interna do WebApp com o Azure SQL Database
-   - Acessar o WebApp criado no passo anterior
-   - Networking
-   - Outbound Traffic
-   - Vnet Integration
-   - Add VNet
-   - Escolher a vnet-hub
-   - Escolher a subnet sub-db
-
-
-## STEP24 - Deploy WebApp Gerenciador/Interface
-1- Criar um WebApp
-```cmd
-   Nome: appinterface001 (usar seu nome exclusivo)
-   Publish: Code
-   Runtime Stack: .NET6
-   Região: east-us
-   Escolher AppServicePlan já criado
-```
-2- Deploy da aplicação
-Baixar o zip da aplicação em 
-https://github.com/raphasi/imersaoazure
-
-3- Realizar o deploy da aplicação para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
-```cmd
-az login (ou utilizar o CloudShell)
-az webapp deploy --resource-group rg-azure --name <app-name> --src-path DeploymentGerenciador.zip
-```
-4- Ajustar application settings 
-   - Acessar o WebApp - Configuration
-   - Application settings
-   - New application settings
-   - Add/Edit application settings
-  ```cmd
-   Name: ServiceUri:UrlApi
-   Value: https://apim-tftec00001.azure-api.net (coletar a URL do APIM)
-   SAVE
-   ``` 
-
-## STEP25 - Expor requests no APIM
-1- Disponibilizar APIs externamente no APIM
-   - Acessar o APIM criado
-   - Acessar APIs
-   - Em Create from definition, escolher a opção OpenAPI
-   - Clicar em Select a file e importar o arquivo APICatalogo.openapi+json (baixado do diretório do github, dentro da pasta APICatalog)
-   - Clicar em Create
-   - Acessar em Design, a seção Backend
-   - Clicar em editar HTTP(s) endpoint
-   - Marcar a opção override e adicionar o endereço do WebApp (APIM - tftecapi01)
-   - Exemplo: https://tftecapi000001.azurewebsites.net/
-   - SAVE
-   - Acessar a aba Settings
-   - Apagar o conteúdo do campo Web service URL
-   - Desmarcar a opção Subscription required
-   - SAVE
-   
 
 
 
