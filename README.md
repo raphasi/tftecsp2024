@@ -307,9 +307,74 @@ Enable log analytics: NO
 ```
 1.1 Configurar o fluxo para o import das imagens
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DOS FLUXOS
+1.0 Configurar o fluxo para importação das imagens
+```cmd
+Esta Logic App realiza a sincronização de imagens entre um servidor FTP e um Azure Blob Storage.
+O fluxo segue a seguinte sequência:
 ```
 
+1.1 Trigger (Gatilho)
+```cmd
+Tipo: HTTP Request
+Quando uma requisição HTTP é recebida, o fluxo é iniciado
+```
+
+1.2 Primeira Ação - Listar Arquivos
+```cmd
+Nome: List files in folder
+Conexão: FTP
+Pasta monitorada: /site/wwwroot/wwwroot/assets/img/produto_evento
+Função: Lista todos os arquivos presentes na pasta especificada do servidor FTP
+```
+
+1.3 Segunda Ação - Loop For Each
+```cmd
+Nome: For each
+Entrada: Resultado da listagem de arquivos
+Função: Itera sobre cada arquivo encontrado na pasta
+Configuração: 
+   - Execução sequencial (uma por vez)
+   - Concorrência: 1 repetição
+```
+
+1.4 Ações dentro do Loop
+```cmd
+Primeira ação do loop:
+   Nome: Get file content using path
+   Função: Obtém o conteúdo do arquivo atual do FTP
+   Entrada: Caminho do arquivo atual (item().Path)
+
+Segunda ação do loop:
+   Nome: Create blob (V2)
+   Função: Cria um novo blob no Azure Storage
+   Configuração:
+      - Container: container-images
+      - Nome do arquivo: Mantém o nome original do arquivo
+      - Modo de transferência: Chunked (em partes)
+   Executa após: Sucesso na obtenção do conteúdo do arquivo
+```
+
+1.5 Conexões necessárias
+```cmd
+FTP:
+   - Tipo: FTP
+   - Função: Acesso ao servidor FTP fonte
+
+Azure Blob:
+   - Tipo: Azure Blob Storage
+   - Função: Armazenamento destino das imagens
+```
+
+### Resultado Final
+```cmd
+Quando executado, o fluxo:
+1. Recebe uma chamada HTTP
+2. Lista todos os arquivos da pasta de imagens no FTP
+3. Para cada arquivo encontrado:
+   - Obtém seu conteúdo do FTP
+   - Cria uma cópia no container do Blob Storage
+4. Mantém sincronizado o repositório de imagens entre FTP e Blob Storage
+```
 
 ## STEP06 - Deploy Apps Registration para o CRM
 
