@@ -1143,12 +1143,8 @@ Secret e Certification permitions: GET
 ```
 
 ## STEP15 - Deploy AKS
-1.0 Acessar a seguinte estrutura:
-```cmd
-Resource Group: rg-tftecsp-001
-Region: uksouth
-Name: mgtid-kvault-certs
-```
+1.0 Acessar a seguinte estrutura: https://github.com/raphasi/tftecsp2024/tree/main/01-Azure-DevOps-Terraform
+
 
 
 
