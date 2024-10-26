@@ -773,7 +773,103 @@ Publisher Domain será automaticamente configurado como: tftecsp.onmicrosoft.com
 ```
 1.1 Configurar as variáveis de ambiente da aplicação BEND
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO BEND
+[
+  {
+    "name": "AzureAD:Audience",
+    "value": "clientid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAD:ClientId",
+    "value": "clientid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAD:Domain",
+    "value": "partiunuvem.com",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAD:Instance",
+    "value": "https://login.microsoftonline.com/",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAD:TenantId",
+    "value": "tenantid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:Issuer",
+    "value": "tenantid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:Authority",
+    "value": "tenantid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:Audience",
+    "value": "audience",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:ClientId",
+    "value": "clientid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:SignUpSignInPolicyId",
+    "value": "B2C_1_login",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:ResetPasswordPolicyId",
+    "value": "B2C_1_reset",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:EditProfilePolicyId",
+    "value": "B2C_1_Edit",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureBlobStorage:ConnectionString",
+    "value": "access-key",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureBlobStorage:content_url",
+    "value": "https://seu-sto.blob.core.windows.net/container-images",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureBlobStorage:RepositorioBlob",
+    "value": "container-images",
+    "slotSetting": false
+  },
+  {
+    "name": "WEBSITE_ENABLE_SYNC_UPDATE_SITE",
+    "value": "true",
+    "slotSetting": false
+  },
+  {
+    "name": "WEBSITE_NODE_DEFAULT_VERSION",
+    "value": "6.9.1",
+    "slotSetting": false
+  },
+  {
+    "name": "WEBSITE_RUN_FROM_PACKAGE",
+    "value": "1",
+    "slotSetting": false
+  }
+]
 ```
 1.2 Configurar as variáveis de ambiente da aplicação AUTH
 ```cmd
