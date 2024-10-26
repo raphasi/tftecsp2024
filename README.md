@@ -224,6 +224,7 @@ https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.AP
 
 
 
+
 2.1 Utilizando o cloudshell, fazer upload dos 4 pacotes.
 
 2.2 Realizar o deploy da aplicação BEND (API) para o WebApp
