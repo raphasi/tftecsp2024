@@ -1151,7 +1151,7 @@ Secret e Certification permitions: GET
 
 
 
-## STEP15 - Deploy do Application Gateway
+## STEP16 - Deploy do Application Gateway
 1.0 Deploy Application Gateway e configuração do App Ingresso:
 ```cmd
 Resource group: rg-tftecsp-prd
