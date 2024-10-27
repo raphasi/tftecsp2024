@@ -1146,8 +1146,167 @@ Secret e Certification permitions: GET
 ## STEP15 - Deploy AKS
 1.0 Acessar a seguinte estrutura: https://github.com/raphasi/tftecsp2024/tree/main/01-Azure-DevOps-Terraform
 
+1.1 Importar repositórios para o Azure Devops:
 
-FIM DO PRIMEIRO DIA!!
+tftec-aovivo-iac
+```cmd
+https://github.com/raphasi/-tftec-aovivo-app.git
+```
+
+tftec-aovivo-app:
+```cmd
+https://github.com/raphasi/-tftec-aovivo-iac.git
+```
+
+## STEP16 - Deploy do Application Gateway
+1.0 Deploy Application Gateway e configuração do App Ingresso:
+```cmd
+Resource group: rg-tftecsp-prd
+Name: appgw-web-001
+Region: uksouth
+Tier: Standard v2
+Enable autoscaling: Yes
+IP address type: IPV4 only
+Virtual Network: vnet-spoke-001
+Subnet: sub-appgw-001
+Frontend IP address type: Public
+Create Public IPV4: pip-appgw-001
+Add a backend pool: bpool-ingresso (Associar ao WebApp de Ingresso)
+Add a routing rule
+Rule name: web-ingresso-https
+Priority: 100
+Listener name: lst-ing-https
+Protocol: HTTPS
+Choose a certificate from Key Vault
+Cert name: cert-ingresso
+Managed identity: mngid-kv-001
+Certificate: cert-ingresso
+Listener type: Multi site
+Host name: ingresso.seudominiopublico
+Target type: Backend pool
+Backend target: bpool.ingresso
+Backend settings: Add new
+Backend settings name: sts-ingresso-https
+Backend server’s certificate is issued by a well-known CA: YES
+Override with new host name: YES
+Host name: FQDN do seu WebApp de ingresso
+```
+1.1 Configuração do App CRM:
+Backend pools
+```cmd
+Adicionar um backendpool
+Name: bpool-crm
+Target type: App Services (Associar ao WebApp de CRM)
+```
+Backend settings
+```cmd
+Backend settings name: sts-crm-https
+Protocol: HTTPS
+Override with new host name: YES
+Host name: Default domain do seu WebApp de CRM
+```
+Health probes
+```cmd
+Name: proble-crm
+Protocol: HTTPS
+Host: Default domain do seu WebApp de CRM
+Path: /
+Backend settings: sts-crm-https
+```
+Listeners
+```cmd
+Listener name: lst-web-crm-https
+Frontend IP: Public
+Protocol: HTTPS
+Choose a certificate: Create new
+Selecionar o certificado referente a aplicação CRM
+Listener type: Multi site
+Hostname: crm.seudominiopublico
+```
+Rules
+```cmd
+Rule name: web-crm-https
+Priority: 102
+Listener: lst-web-crm-https
+Backend targets
+Target type: Backend pool
+Backend target: bpool-crm
+Backend settings:  sts-auth-https 
+```
+
+1.2 Configuração do App BEND (API):
+Backend pools
+```cmd
+Adicionar um backendpool
+Name: bpool-bend
+Target type: App Services (Associar ao WebApp de BEND)
+```
+Backend settings
+```cmd
+Backend settings name: sts-bend-https
+Protocol: HTTPS
+Override with new host name: YES
+Host name: Default domain do seu WebApp de BEND
+```
+Health probes
+```cmd
+Name: proble-bend
+Protocol: HTTPS
+Host: Default domain do seu WebApp de BEND
+Path: /swagger
+Backend settings: sts-bend-https
+```
+Listeners
+```cmd
+Listener name: lst-web-bend-https
+Frontend IP: Public
+Protocol: HTTPS
+Choose a certificate: Create new
+Selecionar o certificado referente a aplicação BEND
+Listener type: Multi site
+Hostname: api.seudominiopublico
+```
+Rules
+```cmd
+Rule name: web-bend-https
+Priority: 103
+Listener: lst-web-bend-https
+Backend targets
+Target type: Backend pool
+Backend target: bpool-bend
+Backend settings:  sts-bend-https 
+```
+
+## STEP17 - Ajustar URLs de autenticação
+1.0 Ajustar as URLs de autenticação OIDC nos App Registrations
+```cmd
+Acessar o APP Registrartion e alterar a URL xxxxxx
+Acessar o APP Registrartion e alterar a URL xxxxxx
+Acessar o APP Registrartion e alterar a URL xxxxxx
+Acessar o APP Registrartion e alterar a URL xxxxxx
+```
+1.1 Ajustar as URLs de autenticação OIDC nos WebApps
+```cmd
+Acessar o WebApp xxx e alterar a URL xxxxxx
+Acessar o WebApp xxx e alterar a URL xxxxxx
+```
+
+
+## STEP17 - Configurar o Application Insights
+1.0 Realizar o deploy do Log Analytics Workspaces
+```cmd
+Resource group: rg-tftecsp-001
+Name: wksloganl001
+Region: uksouth
+```
+1.1 Habilitar o Application Insights no WebApp Ingresso
+```cmd
+Habilitar o Application Insights direcionando os logs para o Workspace criado no passo 1.0
+```
+1.2 Habilitar o Application Insights no WebApp BEND
+```cmd
+Habilitar o Application Insights direcionando os logs para o Workspace criado no passo 1.0
+```
 
 
 
