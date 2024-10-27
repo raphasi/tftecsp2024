@@ -1158,7 +1158,27 @@ tftec-aovivo-app:
 https://github.com/raphasi/-tftec-aovivo-iac.git
 ```
 
-## STEP16 - Deploy do Application Gateway
+
+## STEP16 - Configurar custom domain para WebApps:
+1.0 Configurar o custom domain para WebApp CRM
+```cmd
+Adicionar o dominio customizado a ser usado para a aplicação CRM
+Configurar o system assigned para o WebApp e adicionar a permissão no KeyVault
+Adicionar o certificado referente ao domínio da aplicação
+*Não adicionar o registro de DNS CNAME ou A.
+```
+
+1.1 Configurar o custom domain para WebApp INGRESSO
+```cmd
+Adicionar o dominio customizado a ser usado para a aplicação INGRESSO
+Configurar o system assigned para o WebApp e adicionar a permissão no KeyVault
+Adicionar o certificado referente ao domínio da aplicação
+*Não adicionar o registro de DNS CNAME ou A.
+```
+
+
+
+## STEP17 - Deploy do Application Gateway
 1.0 Deploy Application Gateway e configuração do App Ingresso:
 ```cmd
 Resource group: rg-tftecsp-prd
@@ -1277,7 +1297,7 @@ Backend target: bpool-bend
 Backend settings:  sts-bend-https 
 ```
 
-## STEP17 - Ajustar URLs de autenticação
+## STEP18 - Ajustar URLs de autenticação
 1.0 Ajustar as URLs de autenticação OIDC nos App Registrations
 ```cmd
 Acessar o APP Registrartion e alterar a URL xxxxxx
@@ -1292,7 +1312,7 @@ Acessar o WebApp xxx e alterar a URL xxxxxx
 ```
 
 
-## STEP17 - Configurar o Application Insights
+## STEP19 - Configurar o Application Insights
 1.0 Realizar o deploy do Log Analytics Workspaces
 ```cmd
 Resource group: rg-tftecsp-001
