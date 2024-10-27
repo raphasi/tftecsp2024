@@ -514,6 +514,7 @@ Microsoft Graph:
    - profile (Delegated)
    - offline_access (Delegated)
    - User.Read (Delegated)
+   - email (Delegated)
 
 CRM.API:
    - AdminApi (Delegated)
