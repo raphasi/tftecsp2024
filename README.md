@@ -564,7 +564,7 @@ Add optional claims:
 
 ## STEP07 - Configurar as variáveis de ambiente crm
 1.0 Configurar as variáveis de ambiente da aplicação CRM
-```cmd
+``` json
 [
   {
     "name": "ApiSettings:BaseUrl",
@@ -619,11 +619,6 @@ Add optional claims:
   {
     "name": "WEBSITE_ENABLE_SYNC_UPDATE_SITE",
     "value": "true",
-    "slotSetting": false
-  },
-  {
-    "name": "WEBSITE_RUN_FROM_PACKAGE",
-    "value": "1",
     "slotSetting": false
   }
 ]
@@ -774,7 +769,7 @@ Publisher Domain será automaticamente configurado como: tftecsp.onmicrosoft.com
 ## STEP9.1 - Configurar as variáveis de ambiente demais ambientes
 
 1.0 Configurar as variáveis de ambiente da aplicação INGRESSO
-```cmd
+``` json
 [
   {
     "name": "ApiSettings:BaseUrl",
@@ -839,7 +834,7 @@ Publisher Domain será automaticamente configurado como: tftecsp.onmicrosoft.com
 ]
 ```
 1.1 Configurar as variáveis de ambiente da aplicação BEND
-```cmd
+``` json
 [
   {
     "name": "AzureAD:Audience",
@@ -913,12 +908,12 @@ Publisher Domain será automaticamente configurado como: tftecsp.onmicrosoft.com
   },
   {
     "name": "AzureBlobStorage:content_url",
-    "value": "https://seu-sto.blob.core.windows.net/container-images",
+    "value": "https://seu-sto.blob.core.windows.net/imagens",
     "slotSetting": false
   },
   {
     "name": "AzureBlobStorage:RepositorioBlob",
-    "value": "container-images",
+    "value": "imagens",
     "slotSetting": false
   },
   {
@@ -930,16 +925,11 @@ Publisher Domain será automaticamente configurado como: tftecsp.onmicrosoft.com
     "name": "WEBSITE_NODE_DEFAULT_VERSION",
     "value": "6.9.1",
     "slotSetting": false
-  },
-  {
-    "name": "WEBSITE_RUN_FROM_PACKAGE",
-    "value": "1",
-    "slotSetting": false
   }
 ]
 ```
 1.2 Configurar as variáveis de ambiente da aplicação AUTH
-```cmd
+``` json
   {
     "name": "AzureAD:Audience",
     "value": "api://d72a4f3c-74f9-46f5-a1d0-6a159f89855c",
