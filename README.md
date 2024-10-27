@@ -1298,19 +1298,19 @@ Backend settings:  sts-bend-https
 ```
 
 ## STEP18 - Ajustar URLs de autenticação
-1.0 Ajustar as URLs de autenticação OIDC nos App Registrations
+1.0 Ajustar as URLs de autenticação OIDC no App Registration - CRM.APP.SITE
 ```cmd
-Acessar o APP Registrartion e alterar a URL xxxxxx
-Acessar o APP Registrartion e alterar a URL xxxxxx
-Acessar o APP Registrartion e alterar a URL xxxxxx
-Acessar o APP Registrartion e alterar a URL xxxxxx
+Acessar o APP Registrartion e alterar a URL configurada no Application Gateway para o CRM
+```
+1.1 Ajustar as URLs de autenticação OIDC no App Registration - SISTEMA.LOJA
+```cmd
+Acessar o APP Registrartion e alterar a URL configurada no Application Gateway para o INGRESSO
 ```
 1.1 Ajustar as URLs de autenticação OIDC nos WebApps
 ```cmd
-Acessar o WebApp xxx e alterar a URL xxxxxx
-Acessar o WebApp xxx e alterar a URL xxxxxx
+Acessar o WebApp CRM e alterar a URL ApiSettings:BaseUrl para a URL configurada no Application Gateway para o CRM
+Acessar o WebApp INGRESSO e alterar a URL ApiSettings:BaseUrl para a a URL configurada no Application Gateway para o INGRESSO
 ```
-
 
 ## STEP19 - Configurar o Application Insights
 1.0 Realizar o deploy do Log Analytics Workspaces
@@ -1365,6 +1365,24 @@ Service: Service
 Priority: 210
 ```
 
+2.0 Configuração Base
+```cmd
+Nome: apim-tftecspdev-001
+Região: UK South
+SKU: Developer (1 unidade)
+Publisher: TFTEC DEV (contato@tftec.com.br)
+Virtual Network: External (sub-apim-001)
+Public IP: Enabled
+```
+2.1 Configuração de APIs
+```cmd
+API Principal (appbendsp-dev):
+   - Backend: BEND
+   - URL: appgw bend
+   - Protocolo: HTTPS
+   - Subscription: Not Required
+   - Operations: GET, POST, PUT, DELETE, HEAD, OPTIONS, PATCH, TRACE
+```
 
 
 
