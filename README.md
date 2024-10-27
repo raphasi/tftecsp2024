@@ -1329,7 +1329,7 @@ Habilitar o Application Insights direcionando os logs para o Workspace criado no
 ```
 
 ## STEP20 - Deploy Terraform
-1.0 Acessar a seguinte estrutura: https://github.com/raphasi/tftecsp2024/tree/main/01-Azure-DevOps-Terraform
+1.0 Acessar a seguinte estrutura: [https://github.com/raphasi/tftecsp2024/tree/main/01-Azure-DevOps-Terraform](https://github.com/raphasi/tftecsp2024/tree/main/01-Azure-DevOps-Terraform)
 
 
 ## STEP21 - Deploy APIM
