@@ -1328,6 +1328,44 @@ Habilitar o Application Insights direcionando os logs para o Workspace criado no
 Habilitar o Application Insights direcionando os logs para o Workspace criado no passo 1.0
 ```
 
+## STEP20 - Deploy Terraform
+1.0 Acessar a seguinte estrutura: https://github.com/raphasi/tftecsp2024/tree/main/01-Azure-DevOps-Terraform
+
+
+## STEP21 - Deploy APIM
+1.0 Criar uma subnet para o APIM na VNET vnet-spk-001
+```cmd
+SUBNET: sub-apim-001
+AddressPrefix 10.11.6.0/24
+```
+
+1.1 Associar o NSG ao subnet do APIM - nsg-skp-001
+
+1.2 Criar duas regras de inbound no nsg-skp-001
+Regra01 
+```cmd
+Source: Service Tag
+Source service tag: ApiManagement
+Source port ranges: *
+Destination: Service Tag
+Destination service tag: VirtualNetwork
+Service: Custom
+Destination port ranges: 3443
+Priority: 200
+```
+
+Regra02
+```cmd
+Source: Service Tag
+Source service tag: Internet
+Source port ranges: *
+Destination: IP Address
+Destination IP addresses/CIDR ranges: 10.11.6.0/24
+Service: Service
+Priority: 210
+```
+
+
 
 
 
