@@ -20,7 +20,6 @@ O desenho de arquitetura informado abaixo mostra alguns detalhes de como está c
 
 ## STEP01 - Criar um Resource Group e estrutura de VNETS e Subnets
 1- Script PowerShell para criar estrutura de rede inicial
-Realizar download do Script e importar no Azure CloudShell: https://github.com/raphasi/tftecaovivosp24/blob/main/Script_Landing_Zone.ps1
 ```cmd
 ## Script: Criar Landing Zone - TFTEC ao VIVO SP
 ## Autor: Raphael Andrade
@@ -220,32 +219,34 @@ https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.We
 Aplicação CRM
 https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.WebApp.Site.zip
 
-Aplicação AUTH
+Aplicação AUTH 
 https://raw.githubusercontent.com/raphasi/tftecsp2024/main/WebApps%20Code/CRM.API.AUTH.zip
+
+
 
 
 2.1 Utilizando o cloudshell, fazer upload dos 4 pacotes.
 
 2.2 Realizar o deploy da aplicação BEND (API) para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
+Abrir o cloudshel e executar o seguinte comando:
 ```cmd
 az webapp deploy --resource-group rg-tftecsp-001 --name app-bend-tftec-dev --src-path CRM.API.BEND.zip
 ```
 
 2.3 Realizar o deploy da aplicação INGRESSO para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
+Abrir o cloudshel e executar o seguinte comando:
 ```cmd
 az webapp deploy --resource-group rg-tftecsp-001 --name app-ingresso-tftec-dev --src-path CRM.WebApp.Ingresso.zip
 ```
 
 2.4 Realizar o deploy da aplicação CRM para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
+Abrir o cloudshel e executar o seguinte comando:
 ```cmd
 az webapp deploy --resource-group rg-tftecsp-001 --name app-crm-tftec-dev --src-path CRM.WebApp.Site.zip
 ```
 
 2.5 Realizar o deploy da aplicação AUTH para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
+Abrir o cloudshel e executar o seguinte comando:
 ```cmd
 az webapp deploy --resource-group rg-tftecsp-001 --name app-auth-tftec-dev --src-path CRM.API.AUTH.zip
 ```
@@ -267,6 +268,8 @@ User: admin.tftec
 Pass: Partiunuvem@2024
 ```
 Download do SQL SSMS: https://aka.ms/ssmsfullsetup
+
+Donwload do Database: https://raw.githubusercontent.com/raphasi/tftecsp2024/main/sistema-tftec-db.bacpac
 
 1.2 Importar database aplicação WebSite
 ```cmd
@@ -305,9 +308,74 @@ Enable log analytics: NO
 ```
 1.1 Configurar o fluxo para o import das imagens
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DOS FLUXOS
+1.0 Configurar o fluxo para importação das imagens
+```cmd
+Esta Logic App realiza a sincronização de imagens entre um servidor FTP e um Azure Blob Storage.
+O fluxo segue a seguinte sequência:
 ```
 
+1.1 Trigger (Gatilho)
+```cmd
+Tipo: HTTP Request
+Quando uma requisição HTTP é recebida, o fluxo é iniciado
+```
+
+1.2 Primeira Ação - Listar Arquivos
+```cmd
+Nome: List files in folder
+Conexão: FTP
+Pasta monitorada: /site/wwwroot/wwwroot/assets/img/produto_evento
+Função: Lista todos os arquivos presentes na pasta especificada do servidor FTP
+```
+
+1.3 Segunda Ação - Loop For Each
+```cmd
+Nome: For each
+Entrada: Resultado da listagem de arquivos
+Função: Itera sobre cada arquivo encontrado na pasta
+Configuração: 
+   - Execução sequencial (uma por vez)
+   - Concorrência: 1 repetição
+```
+
+1.4 Ações dentro do Loop
+```cmd
+Primeira ação do loop:
+   Nome: Get file content using path
+   Função: Obtém o conteúdo do arquivo atual do FTP
+   Entrada: Caminho do arquivo atual (item().Path)
+
+Segunda ação do loop:
+   Nome: Create blob (V2)
+   Função: Cria um novo blob no Azure Storage
+   Configuração:
+      - Container: container-images
+      - Nome do arquivo: Mantém o nome original do arquivo
+      - Modo de transferência: Chunked (em partes)
+   Executa após: Sucesso na obtenção do conteúdo do arquivo
+```
+
+1.5 Conexões necessárias
+```cmd
+FTP:
+   - Tipo: FTP
+   - Função: Acesso ao servidor FTP fonte
+
+Azure Blob:
+   - Tipo: Azure Blob Storage
+   - Função: Armazenamento destino das imagens
+```
+
+### Resultado Final
+```cmd
+Quando executado, o fluxo:
+1. Recebe uma chamada HTTP
+2. Lista todos os arquivos da pasta de imagens no FTP
+3. Para cada arquivo encontrado:
+   - Obtém seu conteúdo do FTP
+   - Cria uma cópia no container do Blob Storage
+4. Mantém sincronizado o repositório de imagens entre FTP e Blob Storage
+```
 
 ## STEP06 - Deploy Apps Registration para o CRM
 
@@ -772,7 +840,103 @@ Publisher Domain será automaticamente configurado como: tftecsp.onmicrosoft.com
 ```
 1.1 Configurar as variáveis de ambiente da aplicação BEND
 ```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO BEND
+[
+  {
+    "name": "AzureAD:Audience",
+    "value": "clientid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAD:ClientId",
+    "value": "clientid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAD:Domain",
+    "value": "partiunuvem.com",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAD:Instance",
+    "value": "https://login.microsoftonline.com/",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAD:TenantId",
+    "value": "tenantid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:Issuer",
+    "value": "tenantid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:Authority",
+    "value": "tenantid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:Audience",
+    "value": "audience",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:ClientId",
+    "value": "clientid",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:SignUpSignInPolicyId",
+    "value": "B2C_1_login",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:ResetPasswordPolicyId",
+    "value": "B2C_1_reset",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureB2C:EditProfilePolicyId",
+    "value": "B2C_1_Edit",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureBlobStorage:ConnectionString",
+    "value": "access-key",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureBlobStorage:content_url",
+    "value": "https://seu-sto.blob.core.windows.net/container-images",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureBlobStorage:RepositorioBlob",
+    "value": "container-images",
+    "slotSetting": false
+  },
+  {
+    "name": "WEBSITE_ENABLE_SYNC_UPDATE_SITE",
+    "value": "true",
+    "slotSetting": false
+  },
+  {
+    "name": "WEBSITE_NODE_DEFAULT_VERSION",
+    "value": "6.9.1",
+    "slotSetting": false
+  },
+  {
+    "name": "WEBSITE_RUN_FROM_PACKAGE",
+    "value": "1",
+    "slotSetting": false
+  }
+]
 ```
 1.2 Configurar as variáveis de ambiente da aplicação AUTH
 ```cmd
@@ -867,7 +1031,7 @@ DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃ
 ## STEP10 - Realizar teste completo para todas as aplicações
 1.0 Testar experiência no ambiente de Compra e CRM
 ```cmd
-BEND: Realizar um teste de GET nos dados de custumer
+BEND: Realizar um teste de GET nos dados de costumer
 INGRESSO: Realizar o cadastro de um usuário no site utilizando AZURE B2C e realizar uma compra de produto.
 CRM: Realizar a autenticação utilizando um usuário com permissão no Entra ID e validar a compra realizada no passo anterior.
 ```
@@ -923,7 +1087,7 @@ Selecionar a connection já criada no passo anterior
 ```cmd
 Teste via BEND - Swagger
 Teste de login no CRM via Entra ID
-Teste de login B2C no CRM
+Teste de login B2C no Ingresso
 ```
 
 
@@ -941,10 +1105,11 @@ Gerar o certificado cno formato pfx
 Cadastrar uma senha simples para o certificado. Exemplo: tftec2024
 ```
 
-1.2 repetir o passo de criação 3 vezes:
+1.2 repetir o passo de criação 4 vezes:
 ```cmd
  - Certificado para aplicação INGRESSO
  - Certificado para aplicação BEND (api)
+ - Certificado para aplicação AUTH (api)
  - Certificado para aplicação CRM
 ```
 
@@ -961,6 +1126,7 @@ Cadastrar uma senha simples para o certificado. Exemplo: tftec2024
 Fazer upload do certificado pfx da aplicação INGRESSO
 Fazer upload do certificado pfx da aplicação CRM
 Fazer upload do certificado pfx da aplicação BEND (API)
+Fazer upload do certificado pfx da aplicação AUTH (API)
 ```
 
 ## STEP14 - Criar um Managed Identity
@@ -977,354 +1143,11 @@ Adicionar uma Access policies
 Secret e Certification permitions: GET
 ```
 
-## STEP15 - Deploy do Application Gateway
-1.0 Deploy Application Gateway e configuração do App Ingresso:
-```cmd
-Resource group: rg-tftecsp-prd
-Name: appgw-web-001
-Region: uksouth
-Tier: Standard v2
-Enable autoscaling: Yes
-IP address type: IPV4 only
-Virtual Network: vnet-spoke-001
-Subnet: sub-appgw-001
-Frontend IP address type: Public
-Create Public IPV4: pip-appgw-001
-Add a backend pool: bpool-ingresso (Associar ao WebApp de Ingresso)
-Add a routing rule
-Rule name: web-ingresso-https
-Priority: 100
-Listener name: lst-ing-https
-Protocol: HTTPS
-Choose a certificate from Key Vault
-Cert name: cert-ingresso
-Managed identity: mngid-kv-001
-Certificate: cert-ingresso
-Listener type: Multi site
-Host name: ingresso.seudominiopublico
-Target type: Backend pool
-Backend target: bpool.ingresso
-Backend settings: Add new
-Backend settings name: sts-ingresso-https
-Backend server’s certificate is issued by a well-known CA: YES
-Override with new host name: YES
-Host name: FQDN do seu WebApp de ingresso
-```
-1.1 Configuração do App CRM:
-Backend pools
-```cmd
-Adicionar um backendpool
-Name: bpool-crm
-Target type: App Services (Associar ao WebApp de CRM)
-```
-Backend settings
-```cmd
-Backend settings name: sts-crm-https
-Protocol: HTTPS
-Override with new host name: YES
-Host name: Default domain do seu WebApp de CRM
-```
-Health probes
-```cmd
-Name: proble-crm
-Protocol: HTTPS
-Host: Default domain do seu WebApp de CRM
-Path: /
-Backend settings: sts-crm-https
-```
-Listeners
-```cmd
-Listener name: lst-web-crm-https
-Frontend IP: Public
-Protocol: HTTPS
-Choose a certificate: Create new
-Selecionar o certificado referente a aplicação CRM
-Listener type: Multi site
-Hostname: crm.seudominiopublico
-```
-Rules
-```cmd
-Rule name: web-crm-https
-Priority: 102
-Listener: lst-web-crm-https
-Backend targets
-Target type: Backend pool
-Backend target: bpool-crm
-Backend settings:  sts-auth-https 
-```
-
-1.2 Configuração do App BEND (API):
-Backend pools
-```cmd
-Adicionar um backendpool
-Name: bpool-bend
-Target type: App Services (Associar ao WebApp de BEND)
-```
-Backend settings
-```cmd
-Backend settings name: sts-bend-https
-Protocol: HTTPS
-Override with new host name: YES
-Host name: Default domain do seu WebApp de BEND
-```
-Health probes
-```cmd
-Name: proble-bend
-Protocol: HTTPS
-Host: Default domain do seu WebApp de BEND
-Path: /swagger
-Backend settings: sts-bend-https
-```
-Listeners
-```cmd
-Listener name: lst-web-bend-https
-Frontend IP: Public
-Protocol: HTTPS
-Choose a certificate: Create new
-Selecionar o certificado referente a aplicação BEND
-Listener type: Multi site
-Hostname: api.seudominiopublico
-```
-Rules
-```cmd
-Rule name: web-bend-https
-Priority: 103
-Listener: lst-web-bend-https
-Backend targets
-Target type: Backend pool
-Backend target: bpool-bend
-Backend settings:  sts-bend-https 
-```
-
-## STEP16 - Ajustar URLs de autenticação
-1.0 Ajustar as URLs de autenticação OIDC nos App Registrations
-```cmd
-Acessar o APP Registrartion e alterar a URL xxxxxx
-Acessar o APP Registrartion e alterar a URL xxxxxx
-Acessar o APP Registrartion e alterar a URL xxxxxx
-Acessar o APP Registrartion e alterar a URL xxxxxx
-```
-1.1 Ajustar as URLs de autenticação OIDC nos WebApps
-```cmd
-Acessar o WebApp xxx e alterar a URL xxxxxx
-Acessar o WebApp xxx e alterar a URL xxxxxx
-```
+## STEP15 - Deploy AKS
+1.0 Acessar a seguinte estrutura: https://github.com/raphasi/tftecsp2024/tree/main/01-Azure-DevOps-Terraform
 
 
-## STEP17 - Configurar o Application Insights
-1.0 Realizar o deploy do Log Analytics Workspaces
-```cmd
-Resource group: rg-tftecsp-001
-Name: wksloganl001
-Region: uksouth
-```
-1.1 Habilitar o Application Insights no WebApp Ingresso
-```cmd
-Habilitar o Application Insights direcionando os logs para o Workspace criado no passo 1.0
-```
-1.2 Habilitar o Application Insights no WebApp BEND
-```cmd
-Habilitar o Application Insights direcionando os logs para o Workspace criado no passo 1.0
-```
-
-## STEP18 - Deploy WebApp SLOTS
-1.0 Criar um slot para o WebApp do INGRESSO
-```cmd
-Acessar o WebApp INGRESSO
-Ir na opção Deployment slots - Add slot
-Name: dev (ele irá complementar o nome com o default name do WebApp principal
-Clone settings from: Do not clone settings
-```
-1.1 Criar um slot para o WebApp do CRM
-```cmd
-Acessar o WebApp CRM
-Ir na opção Deployment slots - Add slot
-Name: dev (ele irá complementar o nome com o default name do WebApp principal
-Clone settings from: Do not clone settings
-```
-1.1 Criar um slot para o WebApp do BEND
-```cmd
-Acessar o WebApp BEND
-Ir na opção Deployment slots - Add slot
-Name: dev (ele irá complementar o nome com o default name do WebApp principal
-Clone settings from: Do not clone settings
-```
-
-## STEP19 - Criar banco de DEV
-1.0 Criar uma base no Azure SQL Database para DEV
-```cmd
-Acessar o o database de produção sistema-tftec-db
-Selecionar a opção de copy
-Database name sistema-tftec-db-dev
-Server: o mesmo de produção
-Want to use SQL elastic pool?: NO
-Compute + storage: Basic
-Backup storage redundancy: Locally-redundant backup storage
-```
-
-## STEP20 - Ajuste Connection String DEV e Private Connections
-1.1 Configurar VNET Integration para o WebApps BEND-DEV
-```cmd
-Acessar o menu Networking
-Clicar em Virtual network integration - Not configured
-Add Virtual Network Integration
-Virtual Network: vnet-spk-001
-Subnet: sub-vint-001
-```
-1.2 Configurar VNET Integration para o WebApps INGRESSO-DEV
-```cmd
-Acessar o menu Networking
-Clicar em Virtual network integration - Not configured
-Add Virtual Network Integration
-Virtual Network: vnet-spk-001
-Subnet: sub-vint-001
-```
-1.2 Configurar VNET Integration para o WebApps CRM-DEV
-```cmd
-Acessar o menu Networking
-Clicar em Virtual network integration - Not configured
-Add Virtual Network Integration
-Virtual Network: vnet-spk-001
-Subnet: sub-vint-001
-```
-
-2.0 Configurar conexão BEND-DEV x SQL Database DEV
-```cmd
-Realizar o ajuste da connection string no WebApp BEND-DEV
-Testar o Swagger validando uma consulta no banco
-```
-
-## STEP21 - Configurar as variáveis de ambiente para os SLOTs de DEV
-1.0 Configurar as variáveis de ambiente da aplicação INGRESSO-DEV
-```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO INGRESSO
-```
-1.1 Configurar as variáveis de ambiente da aplicação BEND-DEV
-```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO BEND
-```
-1.1 Configurar as variáveis de ambiente da aplicação CRM-DEV
-```cmd
-DESCREVER OS PASSOS PARA CONFIGURAÇÃO DAS VARIÁVEIS DE AMBIENTE DA APLICAÇÃO BEND
-```
-
-
-
-
-
-
-# PASSOS UTILIZADOS NO EVENTO DE 2023 #
-
-
-
-## STEP21 - Deploy APIM - API Management service
-  ```cmd
-   Cluster present configuration: Standard
-   Nome: apim-tftec01
-   Região: east-us
-   Organization Name: TFTEC Cloud
-   Administrator email: seu email para notificações
-   Pricing tier: Developer
-   ```
-   
-## STEP22 - Import Azure SQL Database
-```cmd
-Abrir o SQL Management Studio
-Server Name: Copiar o nome do SQL Server já existente
-Alterar formato de autenticação para SQL Server authentication  
-Logar com usuário e senha usados na criação do banco
-Importar o database usando a opção de dacpac
-Manter o nome do database como apim_database
-```
-
-## STEP23 - Deploy WebApp API
-1- Criar um WebApp
-```cmd
-   Nome: tftecapi01 (usar seu nome exclusivo)
-   Publish: Code
-   Runtime Stack: .NET6
-   Região: east-us
-   Escolher AppServicePlan já criado
-```
-2- Deploy da aplicação
-Baixar o zip da aplicação em 
-https://github.com/raphasi/imersaoazure
-
-3- Realizar o deploy da aplicação para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
-```cmd
-az login (ou utilizar o CloudShell)
-az webapp deploy --resource-group rg-azure --name <app-name> --src-path DeploymentAPI.zip
-```
-4- Ajustar application setting para endereço do SQL Database
-   - Acessar o WebApp - Configuration
-   - Connection string
-   - New connection string
-   - Add/Edit connection string
-  ```cmd
-   Name: DefaultConnection
-   Value: Server=tcp:sqlsrvtftec00001.database.windows.net,1433;Initial Catalog=apim_database;Persist Security Info=False;User ID=adminsql;Password=Partiunuvem@2023;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
-   Type: SQLAzure
-   SAVE
-   ``` 
-   
-5- Ajustar conexão interna do WebApp com o Azure SQL Database
-   - Acessar o WebApp criado no passo anterior
-   - Networking
-   - Outbound Traffic
-   - Vnet Integration
-   - Add VNet
-   - Escolher a vnet-hub
-   - Escolher a subnet sub-db
-
-
-## STEP24 - Deploy WebApp Gerenciador/Interface
-1- Criar um WebApp
-```cmd
-   Nome: appinterface001 (usar seu nome exclusivo)
-   Publish: Code
-   Runtime Stack: .NET6
-   Região: east-us
-   Escolher AppServicePlan já criado
-```
-2- Deploy da aplicação
-Baixar o zip da aplicação em 
-https://github.com/raphasi/imersaoazure
-
-3- Realizar o deploy da aplicação para o WebApp
-Abrir o Powershell ou Terminal e executar o seguinte comando:
-```cmd
-az login (ou utilizar o CloudShell)
-az webapp deploy --resource-group rg-azure --name <app-name> --src-path DeploymentGerenciador.zip
-```
-4- Ajustar application settings 
-   - Acessar o WebApp - Configuration
-   - Application settings
-   - New application settings
-   - Add/Edit application settings
-  ```cmd
-   Name: ServiceUri:UrlApi
-   Value: https://apim-tftec00001.azure-api.net (coletar a URL do APIM)
-   SAVE
-   ``` 
-
-## STEP25 - Expor requests no APIM
-1- Disponibilizar APIs externamente no APIM
-   - Acessar o APIM criado
-   - Acessar APIs
-   - Em Create from definition, escolher a opção OpenAPI
-   - Clicar em Select a file e importar o arquivo APICatalogo.openapi+json (baixado do diretório do github, dentro da pasta APICatalog)
-   - Clicar em Create
-   - Acessar em Design, a seção Backend
-   - Clicar em editar HTTP(s) endpoint
-   - Marcar a opção override e adicionar o endereço do WebApp (APIM - tftecapi01)
-   - Exemplo: https://tftecapi000001.azurewebsites.net/
-   - SAVE
-   - Acessar a aba Settings
-   - Apagar o conteúdo do campo Web service URL
-   - Desmarcar a opção Subscription required
-   - SAVE
-   
+FIM DO PRIMEIRO DIA!!
 
 
 
